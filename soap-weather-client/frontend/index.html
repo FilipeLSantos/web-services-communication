@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>SOAP Weather | Previsão Meteorológica</title>
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <header class="background">
+      <nav class="menu-box">
+        <div class="marca">
+          <div class="marca-icone">☁</div>
+          <span class="menu-name">SOAP Weather</span>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="apresentacao background">
+        <div class="conteudo hero">
+          <p class="tag-apresentacao">WEB SERVICE SOAP</p>
+
+          <h1>
+            Previsão do tempo<br />
+            de forma <span class="destaque">simples</span>
+          </h1>
+
+          <p class="descricao">
+            Informe uma latitude e uma longitude dos Estados Unidos para
+            consultar dados meteorológicos fornecidos pelo serviço SOAP da NOAA.
+          </p>
+
+          <form id="weather-form" class="form-consulta">
+            <div class="campo">
+              <label for="latitude">Latitude</label>
+
+              <input
+                id="latitude"
+                name="latitude"
+                type="number"
+                step="any"
+                value="40.7128"
+                required
+              />
+            </div>
+
+            <div class="campo">
+              <label for="longitude">Longitude</label>
+
+              <input
+                id="longitude"
+                name="longitude"
+                type="number"
+                step="any"
+                value="-74.0060"
+                required
+              />
+            </div>
+
+            <button id="consultar" type="submit">Consultar previsão</button>
+          </form>
+
+          <p id="mensagem" class="mensagem"></p>
+        </div>
+      </section>
+
+      <section id="resultado" class="resultado oculto">
+        <div class="conteudo resultado-conteudo">
+          <p class="secao-tag">PREVISÃO</p>
+
+          <div class="titulo-resultado">
+            <div>
+              <h2>Próximos dias</h2>
+
+              <p class="texto-secundario">
+                Clique em um dia para visualizar os detalhes por horário.
+              </p>
+            </div>
+
+            <div id="coordenadas" class="coordenadas"></div>
+          </div>
+
+          <div id="cards-dias" class="cards-dias"></div>
+
+          <div id="detalhes" class="detalhes-card">
+            <div class="detalhes-cabecalho">
+              <div>
+                <p class="secao-tag">DETALHES</p>
+
+                <h3 id="detalhes-data">Selecione um dia</h3>
+              </div>
+
+              <div id="detalhes-resumo" class="detalhes-resumo"></div>
+            </div>
+
+            <div class="tabela-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Horário</th>
+                    <th>Temperatura</th>
+                    <th>Vento</th>
+                  </tr>
+                </thead>
+
+                <tbody id="tabela-horarios"></tbody>
+              </table>
+            </div>
+
+            <div id="precipitacao" class="precipitacao"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
