@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consulta de Endereços · ViaCEP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+    <main class="page">
+        <div class="container">
+            <header class="header">
+                <span class="eyebrow">ViaCEP Integration</span>
+                <h1 class="title">Consulta de Endereços</h1>
+                <p class="subtitle">
+                    Encontre endereços completos a partir de um CEP ou descubra o CEP informando estado, cidade e logradouro.
+                </p>
+            </header>
+
+            <section class="card" aria-label="Formulário de consulta">
+                <div class="tabs" role="tablist" aria-label="Tipo de busca">
+                    <button
+                        type="button"
+                        role="tab"
+                        id="tab-cep"
+                        class="tab is-active"
+                        aria-selected="true"
+                        aria-controls="panel-cep"
+                        data-mode="cep"
+                    >
+                        Buscar por CEP
+                    </button>
+                    <button
+                        type="button"
+                        role="tab"
+                        id="tab-address"
+                        class="tab"
+                        aria-selected="false"
+                        aria-controls="panel-address"
+                        data-mode="address"
+                    >
+                        Buscar por Endereço
+                    </button>
+                </div>
+
+                <!-- Painel: Busca por CEP -->
+                <form id="form-cep" class="search-form" novalidate>
+                    <div id="panel-cep" role="tabpanel" aria-labelledby="tab-cep">
+                        <div class="field">
+                            <label for="input-cep" class="label">CEP</label>
+                            <div class="input-wrapper">
+                                <input
+                                    id="input-cep"
+                                    name="cep"
+                                    type="text"
+                                    inputmode="numeric"
+                                    autocomplete="postal-code"
+                                    maxlength="9"
+                                    placeholder="01001-000"
+                                    class="input input-mono"
+                                    aria-describedby="cep-hint"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    id="clear-cep"
+                                    class="input-clear"
+                                    aria-label="Limpar CEP"
+                                    hidden
+                                >
+                                    &times;
+                                </button>
+                            </div>
+                            <p id="cep-hint" class="hint">Informe os 8 dígitos do CEP brasileiro.</p>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="submit-cep">
+                            <span class="btn-text">Consultar CEP</span>
+                            <span class="spinner" aria-hidden="true" hidden></span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Painel: Busca por Endereço -->
+                <form id="form-address" class="search-form" novalidate hidden>
+                    <div id="panel-address" role="tabpanel" aria-labelledby="tab-address">
+                        <div class="field-row">
+                            <div class="field field-uf">
+                                <label for="input-uf" class="label">Estado (UF)</label>
+                                <select id="input-uf" name="uf" class="input select" required>
+                                    <option value="" disabled selected>Selecione</option>
+                                    <option value="AC">AC — Acre</option>
+                                    <option value="AL">AL — Alagoas</option>
+                                    <option value="AP">AP — Amapá</option>
+                                    <option value="AM">AM — Amazonas</option>
+                                    <option value="BA">BA — Bahia</option>
+                                    <option value="CE">CE — Ceará</option>
+                                    <option value="DF">DF — Distrito Federal</option>
+                                    <option value="ES">ES — Espírito Santo</option>
+                                    <option value="GO">GO — Goiás</option>
+                                    <option value="MA">MA — Maranhão</option>
+                                    <option value="MT">MT — Mato Grosso</option>
+                                    <option value="MS">MS — Mato Grosso do Sul</option>
+                                    <option value="MG">MG — Minas Gerais</option>
+                                    <option value="PA">PA — Pará</option>
+                                    <option value="PB">PB — Paraíba</option>
+                                    <option value="PR">PR — Paraná</option>
+                                    <option value="PE">PE — Pernambuco</option>
+                                    <option value="PI">PI — Piauí</option>
+                                    <option value="RJ">RJ — Rio de Janeiro</option>
+                                    <option value="RN">RN — Rio Grande do Norte</option>
+                                    <option value="RS">RS — Rio Grande do Sul</option>
+                                    <option value="RO">RO — Rondônia</option>
+                                    <option value="RR">RR — Roraima</option>
+                                    <option value="SC">SC — Santa Catarina</option>
+                                    <option value="SP">SP — São Paulo</option>
+                                    <option value="SE">SE — Sergipe</option>
+                                    <option value="TO">TO — Tocantins</option>
+                                </select>
+                            </div>
+
+                            <div class="field field-city">
+                                <label for="input-cidade" class="label">Cidade</label>
+                                <input
+                                    id="input-cidade"
+                                    name="cidade"
+                                    type="text"
+                                    placeholder="Ex: São Paulo"
+                                    class="input"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="input-logradouro" class="label">Logradouro</label>
+                            <input
+                                id="input-logradouro"
+                                name="logadouro"
+                                type="text"
+                                placeholder="Ex: Praça da Sé"
+                                class="input"
+                                aria-describedby="address-hint"
+                                required
+                            />
+                            <p id="address-hint" class="hint">
+                                Digite ao menos 3 caracteres para cidade e logradouro.
+                            </p>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="submit-address">
+                            <span class="btn-text">Buscar Endereço</span>
+                            <span class="spinner" aria-hidden="true" hidden></span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Feedback de Erro -->
+                <div id="error-banner" class="alert-error" role="alert" hidden>
+                    <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path
+                            fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                    <span id="error-message"></span>
+                </div>
+            </section>
+
+            <!-- Resultado -->
+            <section id="result-card" class="result-card" aria-live="polite" hidden>
+                <div class="result-header">
+                    <div>
+                        <span class="result-eyebrow">Endereço encontrado</span>
+                        <h2 id="res-cep" class="result-cep">—</h2>
+                    </div>
+                    <div class="result-actions">
+                        <button type="button" id="copy-cep" class="btn-ghost" title="Copiar CEP">
+                            Copiar CEP
+                        </button>
+                        <button type="button" id="copy-all" class="btn-ghost" title="Copiar endereço completo">
+                            Copiar tudo
+                        </button>
+                    </div>
+                </div>
+
+                <dl class="result-grid">
+                    <div class="result-item result-item-full">
+                        <dt class="result-label">Logradouro</dt>
+                        <dd id="res-logradouro" class="result-value">—</dd>
+                    </div>
+                    <div class="result-item">
+                        <dt class="result-label">Bairro</dt>
+                        <dd id="res-bairro" class="result-value">—</dd>
+                    </div>
+                    <div class="result-item">
+                        <dt class="result-label">Cidade / UF</dt>
+                        <dd id="res-cidade-uf" class="result-value">—</dd>
+                    </div>
+                </dl>
+            </section>
+
+            <!-- Histórico recente -->
+            <section id="history-section" class="history" aria-label="Consultas recentes" hidden>
+                <div class="history-header">
+                    <span class="history-title">Recentes</span>
+                    <button type="button" id="clear-history" class="history-clear">Limpar</button>
+                </div>
+                <div id="history-list" class="history-list"></div>
+            </section>
+        </div>
+    </main>
+
+    <script src="/app.js" defer></script>
+</body>
+</html>
