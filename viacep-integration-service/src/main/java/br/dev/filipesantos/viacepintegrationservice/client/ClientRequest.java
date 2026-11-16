@@ -1,6 +1,8 @@
 package br.dev.filipesantos.viacepintegrationservice.client;
 
 public record ClientRequest(
-        String name,
-        String cep
+        String cep,
+        String uf,
+        String cidade,
+        String logadouro
 ) {}
