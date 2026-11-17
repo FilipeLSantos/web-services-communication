@@ -22,7 +22,26 @@ As duas aplicações são independentes e possuem interfaces web próprias.
 web-services-communication/
 │
 ├── viacep-integration-service/
-│   ├── src/
+│   ├── src/main/java/br/dev/filipesantos/viacepintegrationservice/
+│   │   ├── api/
+│   │   │   ├── ViaCepResponse.java
+│   │   │   └── ViaCepService.java
+│   │   │
+│   │   ├── client/
+│   │   │   ├── ClientController.java
+│   │   │   ├── ClientRequest.java
+│   │   │   └── ClientResponse.java
+│   │   │
+│   │   └── ViacepIntegrationServiceApplication.java
+│   │
+│   ├── src/main/resources/
+│   │   ├── static/
+│   │   │   ├── app.js
+│   │   │   ├── index.html
+│   │   │   └── styles.css
+│   │   │
+│   │   └── application.properties
+│   │
 │   ├── pom.xml
 │   ├── mvnw
 │   └── mvnw.cmd
