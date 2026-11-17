@@ -9,93 +9,109 @@ public class Main {
     {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Digite a latitude: ");
-
-        double latitude = scanner.nextDouble();
-
-        System.out.println("Digite a longitude: ");
-
-        double longitude = scanner.nextDouble();
-
         SoapClient client = new SoapClient();
-
-        String resposta = client.consultar(latitude, longitude);
-
         WeatherParser parser = new WeatherParser();
 
-        String dwml = parser.extrairDwml(resposta);
-
-        List<WeatherData> previsoes = parser.parseWeatherData(dwml);
-
-        System.out.println("\n========================================");
-
-        System.out.println("PREVISÃO METEOROLÓGICA");
-
-        System.out.println("========================================");
-
-        for(WeatherData previsao : previsoes)
+        while(true)
         {
-            System.out.println("\n----------------------------------------");
+            System.out.println("\n========================================");
+            System.out.println("NOVA CONSULTA");
+            System.out.println("========================================");
 
-            System.out.println("Data: "+ previsao.getData());
+            System.out.println("Digite a latitude: ");
+            double latitude = scanner.nextDouble();
 
-            System.out.println("----------------------------------------");
+            System.out.println("Digite a longitude: ");
+            double longitude = scanner.nextDouble();
 
-            if(previsao.getTemperaturaMaxima() != null)
+            String resposta = client.consultar(latitude, longitude);
+
+            String dwml = parser.extrairDwml(resposta);
+
+            List<WeatherData> previsoes = parser.parseWeatherData(dwml);
+
+            System.out.println("\n========================================");
+            System.out.println("PREVISÃO METEOROLÓGICA");
+            System.out.println("========================================");
+
+            for(WeatherData previsao : previsoes)
             {
-                System.out.println("Máxima: " + previsao.getTemperaturaMaxima() + " °C");
-            }
+                System.out.println("\n----------------------------------------");
 
-            if(previsao.getTemperaturaMinima() != null)
-            {
-                System.out.println("Mínima: " + previsao.getTemperaturaMinima() + " °C");
-            }
+                System.out.println("Data: " + previsao.getData());
 
-            List<String> horarios = previsao.getHorarios();
+                System.out.println("----------------------------------------");
 
-            List<Integer> temperaturas = previsao.getTemperaturasHorarias();
-
-            if(!horarios.isEmpty())
-            {
-                System.out.println("\nHora  | Temp. | Vento");
-
-                System.out.println("---------------------------");
-
-                for(int i = 0; i < horarios.size(); i++)
+                if(previsao.getTemperaturaMaxima() != null)
                 {
-                    String horario = horarios.get(i);
+                    System.out.println("Máxima: " + previsao.getTemperaturaMaxima() + " °C");
+                }
 
-                    Integer vento = previsao .getVentoNoHorario(horario);
+                if(previsao.getTemperaturaMinima() != null)
+                {
+                    System.out.println("Mínima: " + previsao.getTemperaturaMinima() + " °C");
+                }
 
-                    String textoVento;
+                List<String> horarios = previsao.getHorarios();
 
-                    if(vento != null)
+                List<Integer> temperaturas = previsao.getTemperaturasHorarias();
+
+                if(!horarios.isEmpty())
+                {
+                    System.out.println("\nHora  | Temp. | Vento");
+
+                    System.out.println("---------------------------");
+
+                    for(int i = 0; i < horarios.size(); i++)
                     {
-                        textoVento = vento + " m/s";
-                    }
-                    else
-                    {
-                        textoVento = "-";
-                    }
+                        String horario = horarios.get(i);
 
-                    System.out.printf("%5s | %4d°C | %s%n", horario, temperaturas.get(i), textoVento);
+                        Integer vento = previsao.getVentoNoHorario(horario);
+
+                        String textoVento;
+
+                        if(vento != null)
+                        {
+                            textoVento = vento + " m/s";
+                        }
+                        else
+                        {
+                            textoVento = "-";
+                        }
+
+                        System.out.printf("%5s | %4d°C | %s%n", horario, temperaturas.get(i), textoVento);
+                    }
+                }
+
+                List<String> periodos = previsao.getPeriodosPrecipitacao();
+
+                List<Integer> probabilidades = previsao.getProbabilidadesPrecipitacao();
+
+                if(!periodos.isEmpty())
+                {
+                    System.out.println("\nProbabilidade de precipitação: ");
+
+                    for(int i = 0; i < periodos.size(); i++)
+                    {
+                        System.out.println(periodos.get(i) + " -> " + probabilidades.get(i) + "%" );
+                    }
                 }
             }
 
-            List<String> periodos = previsao.getPeriodosPrecipitacao();
+            System.out.println("\n========================================");
+            System.out.println("Deseja realizar outra consulta?");
+            System.out.println("1 - Sim");
+            System.out.println("0 - Sair");
 
-            List<Integer> probabilidades = previsao.getProbabilidadesPrecipitacao();
+            int opcao = scanner.nextInt();
 
-            if(!periodos.isEmpty())
+            if(opcao == 0)
             {
-                System.out.println("\nProbabilidade de precipitação:");
-
-                for(int i = 0; i < periodos.size(); i++)
-                {
-                    System.out.println(periodos.get(i) + " -> " + probabilidades.get(i) + "%");
-                }
+                break;
             }
         }
+
+        System.out.println("\nPrograma encerrado.");
 
         scanner.close();
     }

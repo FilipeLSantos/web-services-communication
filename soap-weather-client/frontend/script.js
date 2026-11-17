@@ -11,7 +11,7 @@ const precipitacao = document.getElementById("precipitacao");
 
 let previsoes = [];
 
-form.addEventListener("submit", async function(event) {
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const latitude = document.getElementById("latitude").value;
@@ -23,18 +23,23 @@ form.addEventListener("submit", async function(event) {
   resultado.classList.add("oculto");
 
   try {
-    const resposta = await fetch(`/api/weather?latitude=${latitude}&longitude=${longitude}`);
+    const resposta = await fetch(
+      `/api/weather?latitude=${latitude}&longitude=${longitude}`,
+    );
 
-    if(!resposta.ok)
-    {
-      throw new Error("Não foi possível consultar a previsão.");
+    if (!resposta.ok) {
+      const dadosErro = await resposta.json();
+
+      throw new Error(
+        dadosErro.erro || "Não foi possível consultar a previsão.",
+      );
     }
-
     previsoes = await resposta.json();
 
-    if(previsoes.length === 0)
-    {
-      throw new Error("Nenhuma previsão foi encontrada para estas coordenadas.");
+    if (previsoes.length === 0) {
+      throw new Error(
+        "Nenhuma previsão foi encontrada para estas coordenadas.",
+      );
     }
 
     coordenadas.textContent = `Latitude: ${latitude} | Longitude: ${longitude}`;
@@ -46,28 +51,22 @@ form.addEventListener("submit", async function(event) {
     mensagem.textContent = "Previsão carregada com sucesso.";
 
     resultado.scrollIntoView({ behavior: "smooth" });
-  }
-  catch(erro)
-  {
+  } catch (erro) {
     mensagem.classList.add("erro");
     mensagem.textContent = erro.message;
-  }
-  finally
-  {
+  } finally {
     botao.disabled = false;
   }
 });
 
-function montarCards()
-{
+function montarCards() {
   cardsDias.innerHTML = "";
 
-  previsoes.forEach(function(previsao, indice) {
+  previsoes.forEach(function (previsao, indice) {
     const card = document.createElement("div");
     card.classList.add("card-dia");
 
-    if(indice === 0)
-    {
+    if (indice === 0) {
       card.classList.add("ativo");
     }
 
@@ -91,7 +90,7 @@ function montarCards()
       </div>
     `;
 
-    card.addEventListener("click", function() {
+    card.addEventListener("click", function () {
       mostrarDetalhes(indice);
     });
 
@@ -99,25 +98,23 @@ function montarCards()
   });
 }
 
-function mostrarDetalhes(indice)
-{
+function mostrarDetalhes(indice) {
   const previsao = previsoes[indice];
 
-  document.querySelectorAll(".card-dia").forEach(function(card, indiceCard) {
-    if(indiceCard === indice)
-    {
+  document.querySelectorAll(".card-dia").forEach(function (card, indiceCard) {
+    if (indiceCard === indice) {
       card.classList.add("ativo");
-    }
-    else
-    {
+    } else {
       card.classList.remove("ativo");
     }
   });
 
   detalhesData.textContent = previsao.data;
 
-  const maxima = previsao.maxima !== null ? `${previsao.maxima} °C` : "Não disponível";
-  const minima = previsao.minima !== null ? `${previsao.minima} °C` : "Não disponível";
+  const maxima =
+    previsao.maxima !== null ? `${previsao.maxima} °C` : "Não disponível";
+  const minima =
+    previsao.minima !== null ? `${previsao.minima} °C` : "Não disponível";
 
   detalhesResumo.innerHTML = `
     <div class="resumo-box"><strong>Máxima:</strong> ${maxima}</div>
@@ -126,7 +123,7 @@ function mostrarDetalhes(indice)
 
   tabelaHorarios.innerHTML = "";
 
-  previsao.horarios.forEach(function(item) {
+  previsao.horarios.forEach(function (item) {
     const linha = document.createElement("tr");
 
     const vento = item.vento !== null ? `${item.vento} m/s` : "-";
@@ -142,21 +139,19 @@ function mostrarDetalhes(indice)
 
   precipitacao.innerHTML = "";
 
-  if(previsao.precipitacao.length > 0)
-  {
+  if (previsao.precipitacao.length > 0) {
     const titulo = document.createElement("h4");
     titulo.textContent = "Probabilidade de precipitação";
     precipitacao.appendChild(titulo);
 
-    previsao.precipitacao.forEach(function(item) {
+    previsao.precipitacao.forEach(function (item) {
       const elemento = document.createElement("div");
       elemento.classList.add("precipitacao-item");
       elemento.textContent = `${item.periodo} → ${item.probabilidade}%`;
       precipitacao.appendChild(elemento);
     });
-  }
-  else
-  {
-    precipitacao.innerHTML = "<p>Nenhum intervalo de precipitação disponível para este dia.</p>";
+  } else {
+    precipitacao.innerHTML =
+      "<p>Nenhum intervalo de precipitação disponível para este dia.</p>";
   }
 }
